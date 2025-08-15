@@ -1,29 +1,21 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-
-# This stage is used to build the service project
+# Etap 1: Budowanie i publikowanie projektu .NET
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["DndToolsWeb2/DndToolsWeb2.csproj", "DndToolsWeb2/"]
 RUN dotnet restore "./DndToolsWeb2/DndToolsWeb2.csproj"
 COPY . .
 WORKDIR "/src/DndToolsWeb2"
-RUN dotnet build "./DndToolsWeb2.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./DndToolsWeb2.csproj" -c Release -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+WORKDIR "/src/DndToolsWeb2"
 RUN dotnet publish "./DndToolsWeb2.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Dodaj tê liniê, aby skopiowaæ zawartoœæ wwwroot do etapu publish
+COPY wwwroot/ /app/publish/wwwroot/
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+# Etap 2: Finalny obraz produkcyjny
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "DndToolsWeb2.dll"]
