@@ -11,11 +11,11 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR "/src/DndToolsWeb2"
 RUN dotnet publish "./DndToolsWeb2.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-# Dodaj tê liniê, aby skopiowaæ zawartoœæ wwwroot do etapu publish
-COPY wwwroot/ /app/publish/wwwroot/
 
 # Etap 2: Finalny obraz produkcyjny
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# Dodaj tê liniê, aby skopiowaæ zawartoœæ wwwroot
+COPY DndToolsWeb2/wwwroot/ ./wwwroot/
 ENTRYPOINT ["dotnet", "DndToolsWeb2.dll"]

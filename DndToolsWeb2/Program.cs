@@ -1,6 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://*:{port}");
+
 builder.Services.AddSingleton<ScraperService>();
 
 builder.Services.AddControllers();
@@ -24,5 +23,5 @@ app.MapControllers();
 
 // dodaj fallback dla SPA / index.html
 app.MapFallbackToFile("index.html");
-//app.UseHealthChecks("/health");
+
 app.Run();
