@@ -14,4 +14,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
 
+// dodaj fallback dla SPA / index.html
+app.MapFallbackToFile("index.html");
+
 app.Run();
