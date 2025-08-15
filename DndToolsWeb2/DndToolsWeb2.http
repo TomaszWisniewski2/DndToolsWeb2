@@ -1,0 +1,6 @@
+@DndToolsWeb2_HostAddress = http://localhost:5030
+
+GET {{DndToolsWeb2_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
