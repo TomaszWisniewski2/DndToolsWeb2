@@ -24,5 +24,5 @@ app.MapControllers();
 
 // dodaj fallback dla SPA / index.html
 app.MapFallbackToFile("index.html");
-app.UseHealthChecks("/health");
+//app.UseHealthChecks("/health");
 app.Run();
