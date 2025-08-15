@@ -1,0 +1,8 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./DndToolsWeb2/Dockerfile"
+
+[deploy]
+startCommand = "./DndToolsWeb2"
+restartPolicyType = "always"
+healthcheckPath = "/health"
